@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SistemaValidacionQRs"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.LoginActivity"/>
+        <activity android:name=".activities.GenerarQrActivity"/>
+        <activity android:name=".activities.HistorialActivity"/>
+        <activity android:name=".activities.PerfilActivity"/>
+        <activity android:name=".activities.EditarPerfilActivity"/>
+        <activity android:name=".activities.GestionUsuariosActivity"/>
+        <activity android:name=".activities.CrearUsuarioActivity"/>
+        <activity android:name=".activities.EscanearQrActivity"/>
+        <activity android:name=".activities.EventoActivity"/>
+        <activity android:name=".activities.CrearEventoActivity"/>
+        <activity android:name=".activities.ParticipantesEventoActivity"/>
+        <activity android:name=".activities.EditarEventoActivity"/>
+        <activity android:name=".Detalle.EventoDetalleAdminActivity"/>
+        <activity android:name=".Detalle.EventoDetalleActivity"/>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".AdminMainActivity"/>
+
+    </application>
+
+
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+</manifest>
