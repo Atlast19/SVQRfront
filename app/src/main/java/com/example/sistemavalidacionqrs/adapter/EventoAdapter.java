@@ -22,8 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-public class EventoAdapter
-        extends RecyclerView.Adapter<EventoAdapter.EventoViewHolder> {
+public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoViewHolder> {
 
     private final List<EventoResponse> listaEventos;
 
@@ -136,6 +135,16 @@ public class EventoAdapter
                             R.id.txtFechaEvento
                     );
         }
+    }
+
+    public void actualizarLista(List<EventoResponse> nuevosEventos) {
+
+        this.listaEventos.clear();
+
+        this.listaEventos.addAll(nuevosEventos);
+
+        notifyDataSetChanged();
+
     }
 
     private String formatearFecha(String fecha) {

@@ -2,7 +2,10 @@ package com.example.sistemavalidacionqrs.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,11 +30,9 @@ import retrofit2.Response;
 public class EventoActivity extends AppCompatActivity {
 
     private RecyclerView recyclerEventos;
-
     private FloatingActionButton fabAgregarEvento;
-
+    private EditText etBuscarEvento;
     private ApiService apiService;
-
     private EventoAdapter adapter;
 
     private final List<EventoResponse> listaEventos =
@@ -41,6 +42,8 @@ public class EventoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventos);
+
+        etBuscarEvento = findViewById(R.id.etBuscarEvento);
 
         SessionManager sessionManager = new SessionManager(this);
 
@@ -85,8 +88,7 @@ public class EventoActivity extends AppCompatActivity {
 
     private void cargarEventos() {
 
-        apiService.obtenerEventos()
-                .enqueue(new Callback<List<EventoResponse>>() {
+        apiService.obtenerEventos().enqueue(new Callback<List<EventoResponse>>() {
 
                     @Override
                     public void onResponse(
@@ -125,6 +127,118 @@ public class EventoActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG
                         ).show();
                     }
-                });
+        });
+
+        etBuscarEvento.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        String texto = s.toString().trim();
+
+                        if(texto.isEmpty()){
+                            cargarEventos();
+
+                        }else{
+
+                            buscarEvento(texto);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(
+                            Editable s) {
+
+                    }
+        });
+
     }
+
+    private void buscarEvento(String texto){
+
+        if(texto.toUpperCase().startsWith("EV")){
+
+            buscarPorCodigo(texto);
+
+        }else{
+
+            buscarPorNombre(texto);
+
+        }
+
+    }
+
+    private void buscarPorCodigo(String codigo){
+
+        apiService.getEventoByCodigo(codigo).enqueue(new Callback<EventoResponse>() {
+
+                    @Override
+                    public void onResponse(
+                            Call<EventoResponse> call,
+                            Response<EventoResponse> response) {
+
+                        if(response.isSuccessful()
+                                && response.body() != null){
+
+                            List<EventoResponse> lista =
+                                    new ArrayList<>();
+
+                            lista.add(response.body());
+
+                            adapter.actualizarLista(
+                                    lista
+                            );
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(
+                            Call<EventoResponse> call,
+                            Throwable t) {
+                    }
+        });
+    }
+
+    private void buscarPorNombre(String nombre){
+
+        apiService.getEventoByNombre(nombre)
+
+                .enqueue(new Callback<List<EventoResponse>>() {
+
+                    @Override
+                    public void onResponse(
+                            Call<List<EventoResponse>> call,
+                            Response<List<EventoResponse>> response) {
+
+                        if(response.isSuccessful()
+                                && response.body() != null){
+
+                            adapter.actualizarLista(
+                                    response.body()
+                            );
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(
+                            Call<List<EventoResponse>> call,
+                            Throwable t) {
+
+                    }
+
+                });
+
+    }
+
 }

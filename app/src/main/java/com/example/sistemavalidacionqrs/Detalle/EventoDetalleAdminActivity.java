@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sistemavalidacionqrs.R;
@@ -39,6 +41,8 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
     private Button btnParticipantes;
     private Button btnEditarEvento;
 
+    private Button btnEliminarEvento;
+
     private ApiService apiService;
 
     private Integer eventoId;
@@ -59,6 +63,21 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
         btnEscanearQr = findViewById(R.id.btnEscanearQr);
         btnParticipantes = findViewById(R.id.btnParticipantes);
         btnEditarEvento = findViewById(R.id.btnEditarEvento);
+        btnEliminarEvento = findViewById(R.id.btnEliminarEvento);
+
+
+        apiService = ApiClient
+                .getClient(this)
+                .create(ApiService.class);
+
+        eventoId = getIntent().getIntExtra(
+                "eventoId",
+                -1
+        );
+
+        btnEliminarEvento.setOnClickListener(v -> {
+            confirmarEliminar();
+        });
 
         apiService = ApiClient
                 .getClient(this)
@@ -117,6 +136,80 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
         });
     }
 
+    private void confirmarEliminar() {
+
+        new AlertDialog.Builder(this)
+
+                .setTitle("Eliminar evento")
+
+                .setMessage(
+                        "¿Está seguro de que desea eliminar este evento?"
+                )
+
+                .setPositiveButton(
+                        "Eliminar",
+                        (dialog, which) -> eliminarEvento()
+                )
+
+                .setNegativeButton(
+                        "Cancelar",
+                        null
+                )
+
+                .show();
+
+    }
+
+    private void eliminarEvento() {
+
+        apiService.eliminarEvento(eventoId)
+
+                .enqueue(new Callback<Void>() {
+
+                    @Override
+                    public void onResponse(
+                            Call<Void> call,
+                            Response<Void> response) {
+
+                        if (response.isSuccessful()) {
+
+                            Toast.makeText(
+                                    EventoDetalleAdminActivity.this,
+                                    "Evento eliminado correctamente",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+
+                            finish();
+
+                        } else {
+
+                            Toast.makeText(
+                                    EventoDetalleAdminActivity.this,
+                                    "No se pudo eliminar el evento",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(
+                            @NonNull Call<Void> call,
+                            Throwable t) {
+
+                        Toast.makeText(
+                                EventoDetalleAdminActivity.this,
+                                t.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show();
+
+                    }
+
+                });
+
+    }
+
     private void cargarEvento() {
 
         apiService.obtenerEventoPorId(eventoId)
@@ -126,7 +219,7 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(
                             Call<EventoResponse> call,
-                            Response<EventoResponse> response) {
+                            @NonNull Response<EventoResponse> response) {
 
                         if (response.isSuccessful()
                                 && response.body() != null) {
@@ -152,7 +245,7 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(
-                            Call<EventoResponse> call,
+                            @NonNull Call<EventoResponse> call,
                             Throwable t) {
 
                         Toast.makeText(

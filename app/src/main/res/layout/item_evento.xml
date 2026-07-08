@@ -4,7 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="4dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
@@ -18,26 +21,33 @@
             android:id="@+id/txtNombreEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="18sp"/>
+            android:text="Nombre Evento"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtCodigoEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="6dp"
+            android:text="Código: EV20260001"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/txtEstadoEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"
+            android:text="Estado: ACTIVO"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/txtFechaEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"
+            android:text="Inicio: 01/07/2026 08:00 PM"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

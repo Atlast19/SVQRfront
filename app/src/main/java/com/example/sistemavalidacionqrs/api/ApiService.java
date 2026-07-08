@@ -42,8 +42,7 @@ public interface ApiService {
 
     @GET("usuarios/GetAllUsuarios") Call<List<UsuarioResponse>> obtenerTodosLosUsuarios();
 
-    @GET("usuarios/GetUsuarioById/{id}")
-    Call<UsuarioResponse> obtenerUsuarioPorId(@Path("id") Integer id);
+    @GET("usuarios/GetUsuarioById/{id}") Call<UsuarioResponse> obtenerUsuarioPorId(@Path("id") Integer id);
 
     @DELETE("usuarios/DeleteUsuario/{id}") Call<Void> eliminarUsuario(@Path("id") Integer id);
 
@@ -57,6 +56,11 @@ public interface ApiService {
 
     @PUT("eventos/UpdateEvento/{id}") Call<EventoResponse> actualizarEvento(@Path("id") Integer id, @Body EventoRequest request);
 
+    @DELETE("eventos/DeleteEvento/{id}") Call<Void> eliminarEvento(@Path("id") Integer id);
+
+    @GET("eventos/GetEventoByCodigo/{codigo}") Call<EventoResponse> getEventoByCodigo(@Path("codigo") String codigo);
+
+    @GET("eventos/GetEventoByNombre/{nombre}") Call<List<EventoResponse>> getEventoByNombre(@Path("nombre") String nombre);
 
 }
 
