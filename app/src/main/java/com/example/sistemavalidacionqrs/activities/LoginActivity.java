@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtPassword;
     private Button btnLogin;
 
+    private TextView txtCrearCuenta;
+
     private ApiService apiService;
 
     @Override
@@ -37,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
 
-        // Si ya existe una sesión iniciada, redirigir según el rol
         if (sessionManager.estaLogueado()) {
 
             Intent intent;
@@ -62,18 +64,19 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Referencias a los controles
+
+        txtCrearCuenta = findViewById(R.id.txtCrearCuenta);
         txtEmail = findViewById(R.id.txtEmail);
         txtPassword = findViewById(R.id.txtPassword);
         btnLogin = findViewById(R.id.btnLogin);
 
-        // Inicializar Retrofit
         apiService = ApiClient
                 .getClient(this)
                 .create(ApiService.class);
 
-        // Evento del botón
+
         btnLogin.setOnClickListener(v -> iniciarSesion());
+        txtCrearCuenta.setOnClickListener(v -> {Intent intent = new Intent(LoginActivity.this, CrearUsuarioActivity.class);startActivity(intent);});
     }
 
     private void iniciarSesion() {

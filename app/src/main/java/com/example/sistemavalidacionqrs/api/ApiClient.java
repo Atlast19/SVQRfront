@@ -31,7 +31,7 @@ public class ApiClient {
 
             } else {
 
-                // 📌 REEMPLAZA esta IP por la IP local de tu computadora
+                // REEMPLAZA esta IP por la IP local de tu computadora
                 baseUrl = "http://192.168.16.255:8080/api/";
             }
 

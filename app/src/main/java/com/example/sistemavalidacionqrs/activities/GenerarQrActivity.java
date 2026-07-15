@@ -110,7 +110,8 @@ public class GenerarQrActivity extends AppCompatActivity {
 
                 } else {
 
-                    Toast.makeText(GenerarQrActivity.this, "Error generando QR", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GenerarQrActivity.this,
+                            "Error generando QR", Toast.LENGTH_SHORT).show();
 
                 }
 

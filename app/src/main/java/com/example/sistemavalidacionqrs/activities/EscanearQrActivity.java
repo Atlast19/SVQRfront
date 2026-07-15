@@ -190,6 +190,7 @@ public class EscanearQrActivity extends AppCompatActivity {
 
 
 
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onFailure(
                             Call<AccesoResponse> call,

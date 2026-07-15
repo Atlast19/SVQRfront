@@ -2,9 +2,13 @@ package com.example.sistemavalidacionqrs.Detalle;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,11 +40,10 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
     private TextView txtFechaInicio;
     private TextView txtFechaFin;
     private TextView txtDescripcion;
-
     private Button btnEscanearQr;
     private Button btnParticipantes;
     private Button btnEditarEvento;
-
+    private ImageView imgEvento;
     private Button btnEliminarEvento;
 
     private ApiService apiService;
@@ -59,7 +62,7 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
         txtFechaInicio = findViewById(R.id.txtFechaInicio);
         txtFechaFin = findViewById(R.id.txtFechaFin);
         txtDescripcion = findViewById(R.id.txtDescripcion);
-
+        imgEvento = findViewById(R.id.imgEvento);
         btnEscanearQr = findViewById(R.id.btnEscanearQr);
         btnParticipantes = findViewById(R.id.btnParticipantes);
         btnEditarEvento = findViewById(R.id.btnEditarEvento);
@@ -83,15 +86,9 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
                 .getClient(this)
                 .create(ApiService.class);
 
-        eventoId = getIntent().getIntExtra(
-                "eventoId",
-                0
-        );
-
         cargarEvento();
 
         btnEscanearQr.setOnClickListener(v -> {
-
             Intent intent = new Intent(
                     EventoDetalleAdminActivity.this,
                     EscanearQrActivity.class
@@ -106,7 +103,6 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
         });
 
         btnParticipantes.setOnClickListener(v -> {
-
             Intent intent = new Intent(
                     EventoDetalleAdminActivity.this,
                     ParticipantesEventoActivity.class
@@ -134,6 +130,8 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
+
+
     }
 
     private void confirmarEliminar() {
@@ -167,9 +165,7 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
                 .enqueue(new Callback<Void>() {
 
                     @Override
-                    public void onResponse(
-                            Call<Void> call,
-                            Response<Void> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) {
 
                         if (response.isSuccessful()) {
 
@@ -233,6 +229,8 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
                             txtFechaFin.setText("Fecha Fin: " + formatearFecha(evento.getFechaExpiracion()));
                             txtDescripcion.setText(evento.getDescripcion());
 
+                            mostrarImagen(evento.getImagen());
+
                         } else {
 
                             Toast.makeText(
@@ -282,4 +280,34 @@ public class EventoDetalleAdminActivity extends AppCompatActivity {
 
         return fecha;
     }
+
+    private void mostrarImagen(String imagenBase64) {
+
+        try {
+
+            if (imagenBase64 == null || imagenBase64.isEmpty()) {
+                return;
+            }
+
+            byte[] bytes = Base64.decode(
+                    imagenBase64,
+                    Base64.DEFAULT
+            );
+
+            Bitmap bitmap = BitmapFactory.decodeByteArray(
+                    bytes,
+                    0,
+                    bytes.length
+            );
+
+            imgEvento.setImageBitmap(bitmap);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+
 }

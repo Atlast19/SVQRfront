@@ -1,19 +1,19 @@
 package com.example.sistemavalidacionqrs.activities;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.util.Base64;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -27,6 +27,8 @@ import com.example.sistemavalidacionqrs.api.ApiService;
 import com.example.sistemavalidacionqrs.model.Eventos.EventoRequest;
 import com.example.sistemavalidacionqrs.model.Eventos.EventoResponse;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -256,15 +258,9 @@ public class EditarEventoActivity extends AppCompatActivity {
 
 
 
-                            if(imagenActual != null
-                                    && !imagenActual.isEmpty()){
+                            if (imagenActual != null && !imagenActual.isEmpty()) {
 
-
-                                Glide.with(
-                                                EditarEventoActivity.this
-                                        )
-                                        .load(imagenActual)
-                                        .into(imgEvento);
+                                mostrarImagenBase64(imagenActual);
 
                             }
 
@@ -399,7 +395,7 @@ public class EditarEventoActivity extends AppCompatActivity {
 
 
             request.setImagen(
-                    imagenSeleccionada.toString()
+                    convertirImagenBase64(imagenSeleccionada)
             );
 
 
@@ -415,10 +411,7 @@ public class EditarEventoActivity extends AppCompatActivity {
         request.setFechaExpiracion(fechaExpiracionSeleccionada);
 
 
-        apiService.actualizarEvento(eventoId, request)
-
-
-                .enqueue(new Callback<EventoResponse>() {
+        apiService.actualizarEvento(eventoId, request).enqueue(new Callback<EventoResponse>() {
 
                     @Override
                     public void onResponse(
@@ -469,11 +462,69 @@ public class EditarEventoActivity extends AppCompatActivity {
                                 t.getMessage(),
                                 Toast.LENGTH_LONG
                         ).show();
-
                     }
+        });
+    }
 
-                });
+    private String convertirImagenBase64(Uri uri){
 
+        try{
+
+            InputStream inputStream =
+                    getContentResolver().openInputStream(uri);
+
+            Bitmap bitmap =
+                    BitmapFactory.decodeStream(inputStream);
+
+            ByteArrayOutputStream baos =
+                    new ByteArrayOutputStream();
+
+            bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    80,
+                    baos
+            );
+
+            byte[] imageBytes =
+                    baos.toByteArray();
+
+            return Base64.encodeToString(
+                    imageBytes,
+                    Base64.DEFAULT
+            );
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+            return null;
+
+        }
+
+    }
+
+    private void mostrarImagenBase64(String imagenBase64) {
+
+        try {
+
+            byte[] bytes = Base64.decode(
+                    imagenBase64,
+                    Base64.DEFAULT
+            );
+
+            Bitmap bitmap = BitmapFactory.decodeByteArray(
+                    bytes,
+                    0,
+                    bytes.length
+            );
+
+            imgEvento.setImageBitmap(bitmap);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
 
     }
 }

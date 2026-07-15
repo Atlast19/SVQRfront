@@ -9,6 +9,14 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <ImageView
+            android:id="@+id/imgEvento"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"/>
+
+
         <TextView
             android:id="@+id/txtNombreEvento"
             android:layout_width="wrap_content"
